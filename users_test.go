@@ -77,7 +77,7 @@ func TestGetUsersClient( t *testing.T) {
 	usersUrl := fmt.Sprintf("%s/users", server.URL)
 	request, err := http.NewRequest("GET", usersUrl, nil)
 
-	req, err := http.DefaultClient.Do(request)
+	res, err := http.DefaultClient.Do(request)
 
 	if err != nil {
 		t.Error(err)
@@ -87,3 +87,24 @@ func TestGetUsersClient( t *testing.T) {
 	}
 }
 
+func TestCreateUserClient( t *testing.T) {
+	r := mux.NewRouter()
+	r.HandleFunc("/users", createUser).Methods("POST")
+	server := httptest.NewServer(r)
+	defer server.Close()
+	usersUrl := fmt.Sprintf("%s/users", server.URL)
+	fmt.Printf(usersUrl)
+	userJson := `{"firstname": "ardeshir", "lastname": "sepahsalar", "email": "ardeshir.org@gmail.com"}`
+	request, err := http.NewRequest("POST", usersUrl, strings.NewReader(userJson))
+
+	res, err := http.DefaultClient.Do(request)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	if res.StatusCode != 201 {
+		t.Errorf("HTTP Status expected: 201, got: %d", res.StatusCode)
+	}
+}
+ 
