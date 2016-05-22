@@ -6,11 +6,11 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
-	
+
 	"github.com/gorilla/mux"
 )
 
-func TestGetUsers( t *testing.T) {
+func TestGetUsers(t *testing.T) {
 	r := mux.NewRouter()
 	r.HandleFunc("/users", getUsers).Methods("GET")
 	req, err := http.NewRequest("GET", "/users", nil)
@@ -19,7 +19,7 @@ func TestGetUsers( t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	
+
 	r.ServeHTTP(w, req)
 	if w.Code != 200 {
 		t.Errorf("HTTP Status expected: 200, got: %d", w.Code)
@@ -32,14 +32,14 @@ func TestCreateUser(t *testing.T) {
 
 	userJson := `{"firstname": "ardeshir", "lastname": "sepahsalar", "email": "ardeshir.org@gmail.com"}`
 	req, err := http.NewRequest(
-		"POST", 
+		"POST",
 		"/users",
 		strings.NewReader(userJson),
-        )	
+	)
 	if err != nil {
 		t.Error(err)
 	}
-	
+
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 	if w.Code != 201 {
@@ -50,7 +50,7 @@ func TestCreateUser(t *testing.T) {
 func TestUniqueEmail(t *testing.T) {
 	r := mux.NewRouter()
 	r.HandleFunc("/users", createUser).Methods("POST")
-	
+
 	userJson := `{"firstname": "ardeshir", "lastname": "sepahsalar", "email": "ardeshir.org@gmail.com"}`
 
 	req, err := http.NewRequest(
@@ -69,7 +69,7 @@ func TestUniqueEmail(t *testing.T) {
 	}
 }
 
-func TestGetUsersClient( t *testing.T) {
+func TestGetUsersClient(t *testing.T) {
 	r := mux.NewRouter()
 	r.HandleFunc("/users", getUsers).Methods("GET")
 	server := httptest.NewServer(r)
@@ -87,7 +87,7 @@ func TestGetUsersClient( t *testing.T) {
 	}
 }
 
-func TestCreateUserClient( t *testing.T) {
+func TestCreateUserClient(t *testing.T) {
 	r := mux.NewRouter()
 	r.HandleFunc("/users", createUser).Methods("POST")
 	server := httptest.NewServer(r)
@@ -107,4 +107,3 @@ func TestCreateUserClient( t *testing.T) {
 		t.Errorf("HTTP Status expected: 201, got: %d", res.StatusCode)
 	}
 }
- 
