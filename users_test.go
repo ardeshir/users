@@ -49,7 +49,7 @@ func TestCreateUser(t *testing.T) {
 
 func TestUniqueEmail(t *testing.T) {
 	r := mux.NewRouter()
-	r.HandlFunc("/users", createUser).Methods("POST")
+	r.HandleFunc("/users", createUser).Methods("POST")
 	
 	userJson := `{"firstname": "ardeshir", "lastname": "sepahsalar", "email": "ardeshir.org@gmail.com"}`
 
@@ -59,7 +59,7 @@ func TestUniqueEmail(t *testing.T) {
 		strings.NewReader(userJson),
 	)
 	if err != nil {
-		t.Errorf(err)
+		t.Error(err)
 	}
 
 	w := httptest.NewRecorder()
@@ -75,7 +75,7 @@ func TestGetUsersClient( t *testing.T) {
 	server := httptest.NewServer(r)
 	defer server.Close()
 	usersUrl := fmt.Sprintf("%s/users", server.URL)
-	request, err := http.NewRequest("GET", userUrl, nil)
+	request, err := http.NewRequest("GET", usersUrl, nil)
 
 	req, err := http.DefaultClient.Do(request)
 
