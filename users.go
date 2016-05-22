@@ -70,5 +70,5 @@ func SetUserRoutes() *mux.Router {
 }
 
 func main() {
-	http.ListenAndServe(":3000", SetUserRoutes())
+	http.ListenAndServe(":8090", SetUserRoutes())
 }
