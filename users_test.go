@@ -35,7 +35,7 @@ func TestCreateUser(t *testing.T) {
 		"POST", 
 		"/users",
 		strings.NewReader(userJson),
-	}
+        )	
 	if err != nil {
 		t.Error(err)
 	}
