@@ -94,7 +94,7 @@ func TestCreateUserClient(t *testing.T) {
 	defer server.Close()
 	usersUrl := fmt.Sprintf("%s/users", server.URL)
 	fmt.Printf(usersUrl)
-	userJson := `{"firstname": "ardeshir", "lastname": "sepahsalar", "email": "ardeshir.org@gmail.com"}`
+	userJson := `{"firstname": "amir", "lastname": "khademzadeh", "email": "khade002@umn.edu"}`
 	request, err := http.NewRequest("POST", usersUrl, strings.NewReader(userJson))
 
 	res, err := http.DefaultClient.Do(request)
