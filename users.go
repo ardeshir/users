@@ -29,3 +29,46 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 	w.Write(users)
 
 }
+
+func createUser(w http.ResponseWriter, r *http.Request) {
+
+	var user User
+	// Decode the incoming User json
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	// validate the user entity
+
+	err = validate(user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	// Insert User entity into User Store
+	userStore = append(userStore, user)
+	w.WriteHeader(http.StatusCreated)
+}
+
+// Validate User Entity
+
+func validate(user User) error {
+	for _, u := range userStore {
+		if u.Email == user.Email {
+			return errors.New("The Email already exists")
+		}
+	}
+	return nil
+}
+
+func SetUserRoutes() *mux.Router {
+	r := mux.NewRouter()
+	r.HandleFunc("/users", createUser).Methods("POST")
+	r.HandleFunc("/users", getUsers).Methods("GET")
+	return r
+}
+
+func main() {
+	http.ListenAndServe(":3000", SetUserRoutes())
+}
