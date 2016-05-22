@@ -47,4 +47,43 @@ func TestCreateUser(t *testing.T) {
 	}
 }
 
+func TestUniqueEmail(t *testing.T) {
+	r := mux.NewRouter()
+	r.HandlFunc("/users", createUser).Methods("POST")
+	
+	userJson := `{"firstname": "ardeshir", "lastname": "sepahsalar", "email": "ardeshir.org@gmail.com"}`
+
+	req, err := http.NewRequest(
+		"POST",
+		"/users",
+		strings.NewReader(userJson),
+	)
+	if err != nil {
+		t.Errorf(err)
+	}
+
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+	if w.Code != 400 {
+		t.Errorf("Bad Request expected: 400, got: %d", w.Code)
+	}
+}
+
+func TestGetUsersClient( t *testing.T) {
+	r := mux.NewRouter()
+	r.HandleFunc("/users", getUsers).Methods("GET")
+	server := httptest.NewServer(r)
+	defer server.Close()
+	usersUrl := fmt.Sprintf("%s/users", server.URL)
+	request, err := http.NewRequest("GET", userUrl, nil)
+
+	req, err := http.DefaultClient.Do(request)
+
+	if err != nil {
+		t.Error(err)
+	}
+	if res.StatusCode != 200 {
+		t.Errorf("HTTP Status expected: 200, got : %d", res.StatusCode)
+	}
+}
 
